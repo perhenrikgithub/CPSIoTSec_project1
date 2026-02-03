@@ -49,8 +49,10 @@ def set_param(param_id, value):
         mavutil.mavlink.MAV_PARAM_TYPE_REAL32 # Standard float type
     )
 
-offset = 0.0
 
+# --- SOFT ATTACK FUNCTION ---
+
+offset = 0.0
 def soft_attack(driftspeed: float, interval: float = 0.1, run_for: int | None = None, reset: bool = True, latitude_deg: float = -35):
     """
     Docstring for soft_attack
@@ -96,6 +98,7 @@ def soft_attack(driftspeed: float, interval: float = 0.1, run_for: int | None = 
 
         raise
 
+# --- STRESS TEST FUNCTION ---
 
 def stress_test_soft_attack(min_v: float, max_v: float, steps: int = 10, duration_per_step: int = 15):
     """
@@ -129,7 +132,6 @@ if __name__ == "__main__":
     # soft_attack(driftspeed=drift_speed)
 
     # --- STRESS TEST ---
-    
     min_drift_speed = 2.2  # m/s
     max_drift_speed = 2.5  # m/s
     steps = 5  # number of different drift speeds to test
