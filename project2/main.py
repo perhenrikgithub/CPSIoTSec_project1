@@ -100,13 +100,6 @@ class SecureVault:
         self.keys = new_keys
         cprint("b", "\n[Vault] Vault contents updated securely.")
 
-    def __str__(self) -> str:
-        """Utility to print vault keys (for debugging)"""
-        vault = "Vault Keys (first 3 hex chars): "
-        for i, k in enumerate(self.keys):
-            vault += f"{k.hex()[:3]},"
-        return vault[:-1]
-
 # ==========================================
 # ENTITIES (IoTEntity is a shared base class for encryption/decryption for both server and device)
 # ==========================================
@@ -304,24 +297,18 @@ if __name__ == "__main__":
     device = IoTDevice(device_vault, "device_001")
 
     # 2. Authentication Flow
-    
     # Step 1: Device sends Request (M1)
     m1 = device.send_M1()
-    
     # Step 2: Server sends Challenge (M2)
     m2_data = server.receive_M1_send_M2(m1)
-    
     # # Step 3: Device computes Response + New Challenge, sends M3
     m3_cipher = device.process_M2_send_M3(m2_data)
-    
     # # Step 4: Server validates, sends Response M4, Updates Vault
     m4_cipher = server.receive_M3_send_M4(m3_cipher)
-    
-    if m4_cipher:
-        # Step 5: Device validates M4, Updates Vault
-        device.process_M4(m4_cipher)
+    # Step 5: Device validates, Updates Vault
+    device.process_M4(m4_cipher)
 
-    print("\n=== Verification of Vault Rotation ===\n")
+    print("\n=== Verification of Vault Rotation ===")
     # Check if vaults rotated and are still synchronized
     print(f"Server Vault Key[0] prefix: {server.vault.keys[0].hex()[:8]}")
     print(f"Device Vault Key[0] prefix: {device.vault.keys[0].hex()[:8]}")
